@@ -1,0 +1,37 @@
+---
+# site.yml - Web Service Playbook for a hybrid set-up
+- name: Apply and Deploy Basic Web Server
+  hosts: all
+  become: yes
+  tasks:
+    - name: Ensure system packages are updated (RHEL family)
+      dnf:
+        name: "*"
+        state: latest
+      when: ansible_os_family == "RedHat"
+
+    - name: Ensure system packages are updated (Debian family)
+      apt:
+        update_cache: yes
+        upgrade: dist
+      when: ansible_os_family == "Debian"
+      
+    - name: Install Nginx Web Server
+      package:
+        name: "nginx"
+        state: present
+
+    - name: Ensure Nginx is enabled and started
+      service:
+        name: "nginx"
+        state: started
+        enabled: yes
+
+    - name: Enforce Firewalld rules (HTTP allowed)
+      firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+      when: inventory_hostname == "managed-node-1"
+      ignore_errors: yes
+    
