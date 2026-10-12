@@ -13,3 +13,10 @@ The hybrid architecture involves a controlling node that is hosted via a local V
 - **Service Deployment:** Automated installation, enablement, and execution of Nginx web services.
 - **Security Baseline:** Firewalld rules enforcement for HTTP traffic.
 - **IAM Integration:** Role-based service access configured on cloud target.
+## Q & A
+### Why is inventory.ini full of placeholders?
+Those placeholders are meant to be replaced with actual IPV4 addresses if you wish to use this playbook yourself, obviously the IP will be different for every user of the playbook, so just replace the placeholder XXX with your actual IPs of your nodes.
+### Why do I get errors relating to sudo on my local nodes when running this?
+The playbook cannot ignore security related privileges of your local Linux nodes, so you have to either pass the Sudo password of your local managed node to the playbook or create a sudoers configuration in your etc that enables NOPASSWD.
+### Nginx cannot be installed and I have fatal errors, why?
+Make sure port 80 of your nodes are actually free and not being used by a HTTP service when running the playbook. Use systemd to stop whatever service that is running on port 80 and rerun the playbook.
